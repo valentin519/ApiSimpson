@@ -9,9 +9,20 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      simpson: ''
+      simpson: null
     };
     this.getQuote = this.getQuote.bind(this);
+  }
+  componentDidMount(){
+    axios.get('https://quests.wilders.dev/simpsons-quotes/quotes')
+    // Extract the DATA from the received response
+    .then(response => response.data)
+    // Use this data to update the state
+    .then(data => {
+      this.setState({
+        simpson: data[0],
+      });
+  });
   }
   getQuote() {
     // Send the request
@@ -29,8 +40,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <DisplayQuote simpson={this.state.simpson}/>
-         <button type="button" onClick={this.getQuote}>Get Quote</button> 
+       {this.state.simpson ? <DisplayQuote simpson={this.state.simpson}/> : <p>Loading API</p>}
+        <button type="button" onClick={this.getQuote}>Get Quote</button> 
       </div>
     );
   }
